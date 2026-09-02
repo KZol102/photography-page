@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import { toSlug } from "../../../utils/url-utils";
+import Layout from "../../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+    const photos = await getCollection("photos");
+    const allTags = [...new Set(photos.flatMap((p) => p.data.tags ?? []))];
+
+    return allTags.map((tag: string) => ({
+        params: { tag: toSlug(tag) },
+        props: { photos: photos.filter((p) => p.data.tags?.includes(tag)) },
+    }));
+}
+
+const { photos } = Astro.props;
+---
+
+<Layout>
+    {photos.map((photo) => <div>{photo.data.title}</div>)}
+</Layout>

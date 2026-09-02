@@ -1,0 +1,26 @@
+{
+  "name": "app",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.0",
+    "@astrojs/mdx": "^8.0.0",
+    "astro": "^7.2.10",
+    "yaml": "^2.9.0"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1"
+  }
+}

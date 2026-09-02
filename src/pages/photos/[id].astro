@@ -1,0 +1,44 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+    const photos = await getCollection("photos");
+    return photos.map((photo) => ({
+        params: { id: photo.id },
+        props: { photo },
+    }));
+}
+
+const { data } = Astro.props.photo;
+//TODO: generate details nicer, handle if film is an object, if there are filters
+//TODO: make camera, lens and maybe film clickable, link to filtered photo page
+---
+
+<Layout>
+    <div class="picture-display content">
+        <div class="image-holder">
+            <Image
+                src={data.image}
+                alt={data.title}
+                title={data.title}
+                width="500"
+            />
+        </div>
+        <div class="details">
+            <h1 class="title">{data.title}</h1>
+            <p class="details-title">Technical details:</p>
+            <div class="technical-details">
+                {data.camera && <p class="camera">Camera: {data.camera}</p>}
+                {data.lens && <p class="lens">Lens: {data.lens}</p>}
+                {data.film && <p class="film">Film: {data.film}</p>}
+            </div>
+            {
+                data.description && (
+                    <div class="description">{data.description}</div>
+                )
+            }
+        </div>
+    </div>
+</Layout>

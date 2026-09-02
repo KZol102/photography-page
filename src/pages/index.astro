@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+
+const photos = await getCollection("photos");
+---
+
+<Layout>
+	<div class="index">
+		<h1>Photography Portfolio</h1>
+		<div class="wrap">
+			{
+				photos.map((photo) => (
+					<div class="box">
+						<a href={"/photos/" + photo.id}>
+							<Image
+								src={photo.data.image}
+								alt={photo.data.title}
+								title={photo.data.title}
+								width={500}
+								height={500}
+							/>
+						</a>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</Layout>

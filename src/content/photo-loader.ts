@@ -20,7 +20,6 @@ export function photoLoader(dir: string): Loader {
         let data: Record<string, unknown> = {};
         try {
           data = parseYaml(await fs.readFile(metaPath, 'utf-8')) ?? {};
-          console.debug(data)
         } catch {
           logger.warn(`Missing/invalid metadata for ${imageFile}`);
         }

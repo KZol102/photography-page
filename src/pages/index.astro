@@ -3,7 +3,9 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 
-const photos = await getCollection("photos");
+const photos = (await getCollection("photos")).sort(
+	(a, b) => a.data.order - b.data.order,
+);
 ---
 
 <Layout>

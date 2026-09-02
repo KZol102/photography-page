@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { undefined } from "astro:schema";
 
 export async function getStaticPaths() {
     const photos = await getCollection("photos");
@@ -13,6 +14,48 @@ export async function getStaticPaths() {
 
 const { data } = Astro.props.photo;
 //TODO: generate details nicer, handle if film is an object, if there are filters
+let lens = data.lens;
+if ((data.filters?.length ?? 0) > 0) {
+    if (lens) {
+        lens += " + ";
+    } else {
+        lens = "";
+    }
+    const filters =
+        typeof data.filters === "string" ? [data.filters] : data.filters; //TODO: make the yaml file go through parsing / validation
+    lens += filters?.join(" + ");
+}
+let film;
+if (!data.film || typeof data.film === "string") {
+    film = data.film;
+} else {
+    film = data.film.name;
+    let pushPull;
+    if (data.film.push) {
+        pushPull = `Pushed +${data.film.push} in development`;
+    } else if (data.film.pull) {
+        pushPull = `Pulled -${data.film.pull} in development`;
+    }
+    let rating;
+    if (data.film.rating) {
+        rating = `rated at ${data.film.rating} ISO`;
+    }
+    let xProcess;
+    if (data.film.cross_process) {
+        xProcess = `crossprocessed in ${data.film.cross_process}`;
+    }
+    film +=
+        " (" +
+        [data.film.misc, pushPull, rating, xProcess]
+            .filter((x) => !!x)
+            .join(", ") +
+        ")";
+}
+const details: [string | undefined, string][] = [
+    [data.camera, "Camera"],
+    [lens, "Lens"],
+    [film, "Film"],
+];
 //TODO: make camera, lens and maybe film clickable, link to filtered photo page
 ---
 
@@ -30,9 +73,15 @@ const { data } = Astro.props.photo;
             <h1 class="title">{data.title}</h1>
             <p class="details-title">Technical details:</p>
             <div class="technical-details">
-                {data.camera && <p class="camera">Camera: {data.camera}</p>}
-                {data.lens && <p class="lens">Lens: {data.lens}</p>}
-                {data.film && <p class="film">Film: {data.film}</p>}
+                {
+                    details
+                        .filter(([value]) => !!value)
+                        .map(([detail, name]) => (
+                            <p class={name.toLowerCase()}>
+                                {name}: {detail}
+                            </p>
+                        ))
+                }
             </div>
             {
                 data.description && (

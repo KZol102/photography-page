@@ -25,7 +25,7 @@ const photos = defineCollection({
     camera: z.string().optional(),
     lens: z.string().optional(),
     filters: z.array(z.string()).optional(),
-    film: film,
+    film: film.optional(),
     tags: z.array(z.string()).optional(),
     image: image(),
   }),

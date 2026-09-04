@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { Image } from "astro:assets";
+import PhotoCarousel from "../../components/PhotoCarousel";
+import { shuffleArray } from "../../utils/array-utils";
 
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
@@ -19,7 +21,7 @@ const relatedPhotos = allPhotos.filter(
         (post.data.category == "lens" && p.data.lens === post.data.lens) ||
         (post.data.category == "film" && p.data.film === post.data.lens), // TODO: handle film object correctly, handle post equipment and photo equipment both being undefined
 );
-console.debug(relatedPhotos);
+shuffleArray(relatedPhotos);
 ---
 
 <Layout>
@@ -36,15 +38,12 @@ console.debug(relatedPhotos);
         relatedPhotos.length > 0 && (
             <div>
                 <h3>Other photos shot with this {post.data.category}</h3>
-                {relatedPhotos.map((photo) => (
-                    <a href={"/photos/" + photo.id}>
-                        <Image
-                            src={photo.data.image}
-                            alt={photo.data.title}
-                            width={300}
-                        />
-                    </a>
-                ))}
+                <PhotoCarousel
+                    photos={relatedPhotos.map((p) => {
+                        return { id: p.id, ...p.data };
+                    })}
+                    client:visible
+                />
             </div>
         )
     }

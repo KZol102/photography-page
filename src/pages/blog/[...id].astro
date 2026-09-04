@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const allPhotos = await getCollection("photos");
+const relatedPhotos = allPhotos.filter(
+    (p) =>
+        (post.data.category == "camera" &&
+            p.data.camera === post.data.camera) ||
+        (post.data.category == "lens" && p.data.lens === post.data.lens) ||
+        (post.data.category == "film" && p.data.film === post.data.lens), // TODO: handle film object correctly, handle post equipment and photo equipment both being undefined
+);
+console.debug(relatedPhotos);
+---
+
+<Layout>
+    {
+        post.data.hero && (
+            <div class="hero">
+                <Image src={post.data.hero} alt="Hero image" />
+            </div>
+        )
+    }
+    <h1>{post.data.title}</h1>
+    <article><Content /></article>
+    {
+        relatedPhotos.length > 0 && (
+            <div>
+                <h3>Other photos shot with this {post.data.category}</h3>
+                {relatedPhotos.map((photo) => (
+                    <a href={"/photos/" + photo.id}>
+                        <Image
+                            src={photo.data.image}
+                            alt={photo.data.title}
+                            width={300}
+                        />
+                    </a>
+                ))}
+            </div>
+        )
+    }
+</Layout>

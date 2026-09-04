@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import { undefined } from "astro:schema";
 
 export async function getStaticPaths() {
     const photos = await getCollection("photos");
@@ -13,7 +12,6 @@ export async function getStaticPaths() {
 }
 
 const { data } = Astro.props.photo;
-//TODO: generate details nicer, handle if film is an object, if there are filters
 let lens = data.lens;
 if ((data.filters?.length ?? 0) > 0) {
     if (lens) {

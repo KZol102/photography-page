@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { lensMounts } from "../content.config";
+
+const posts = await getCollection("blog");
+
+const categories = [...lensMounts, "Other"] as const;
+
+const intros: Record<(typeof categories)[number], any> = {
+    "Minolta SR": `
+            Minolta was a japanese camera manufacturer which were in many
+            aspects at the front of the industry. While their photography
+            division was sold to Sony and much of their legacy still lives on,
+            they are definitely less recognized as something like Nikon or Canon
+            when it comes to SLR cameras of the last century. But that also
+            means that these amazing cameras and their first party lenses can
+            usually be found at great prices. My Minolta SR mount cameras and
+            lenses are definitely my most used equipment and for good reason.
+        `,
+    M42: undefined,
+    Other: undefined,
+};
+---
+
+<Layout title="Equipment">
+    <div>
+        Cameras, lenses, filters and other accessories are just tools: means to
+        an artistic end... but they are really fun and interesting tools, so
+        I'll dedicate this page to the minutiae of the equipment I tend to use
+        (or used in the past).
+    </div>
+    <h2>Cameras and lenses by mount</h2>
+    {
+        categories.map((category) => {
+            const cameras = posts
+                .filter((post) => post.data.mount == category)
+                .filter((post) => post.data.camera)
+                .map((post) => (
+                    <div>
+                        <a href={"/blog/" + post.id}>{post.data.title}</a>
+                    </div>
+                ));
+            const lenses = posts
+                .filter((post) => post.data.mount == category)
+                .filter((post) => post.data.lens)
+                .map((post) => (
+                    <div>
+                        <a href={"/blog/" + post.id}>{post.data.title}</a>
+                    </div>
+                ));
+            return (
+                <div class="category">
+                    <h2>{category}</h2>
+                    {intros[category] && <div>{intros[category]}</div>}
+                    {cameras.length > 0 && (
+                        <>
+                            <h3>Cameras</h3>
+                            {cameras}
+                        </>
+                    )}
+                    {lenses.length > 0 && (
+                        <>
+                            <h3>Lenses</h3>
+                            {lenses}
+                        </>
+                    )}
+                </div>
+            );
+        })
+    }
+</Layout>

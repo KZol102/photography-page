@@ -1,0 +1,10 @@
+order: 51
+title: Acute Angles
+camera: Minolta SR-T 101
+lens: Minolta MD 50mm f/1.4
+filters:
+  - "#25 Red Filter"
+  - Circular Polarizer Filter
+film: Kentmere 400
+#TODO: add dev details here
+tags: [Film, Black and White]

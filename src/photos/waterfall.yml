@@ -1,7 +1,7 @@
 order: 47
 title: Waterfall
 camera: Minolta XD-7
-lens: Minolta MD 50mm 1.4
-filters: ND64 Filter
+lens: Minolta MD 50mm f/1.4
+filters: [ND64 Filter]
 film: Kodak Ektachrome 100D
 tags: [Film, Color]

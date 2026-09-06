@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { toSlug } from "../../utils/url-utils";
 
 export async function getStaticPaths() {
     const photos = await getCollection("photos");
@@ -57,7 +58,7 @@ const details: [string | undefined, string][] = [
 //TODO: make camera, lens and maybe film clickable, link to filtered photo page
 ---
 
-<Layout>
+<Layout title={"Portfolio | " + data.title}>
     <div class="picture-display content">
         <div class="image-holder">
             <Image
@@ -86,6 +87,36 @@ const details: [string | undefined, string][] = [
                     <div class="description">{data.description}</div>
                 )
             }
+            {
+                (data.tags?.length ?? 0) > 0 && (
+                    <div class="tags">
+                        {(data.tags ?? []).map((tag) => (
+                            <span class="tag">
+                                <a href={"/photos/category/" + toSlug(tag)}>
+                                    #{tag}
+                                </a>
+                            </span>
+                        ))}
+                    </div>
+                )
+            }
         </div>
     </div>
 </Layout>
+
+<style>
+    div.tags {
+        display: flex;
+        gap: 1rem;
+    }
+    div.tags span.tag {
+        border: 1px solid white;
+        padding: 0.5rem;
+        border-radius: 1rem;
+    }
+
+    div.tags span.tag a {
+        text-decoration: none;
+        color: white;
+    }
+</style>

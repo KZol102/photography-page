@@ -1,9 +1,7 @@
+import type { CollectionEntry } from 'astro:content';
 import { useState } from 'react';
-import { toSlug } from '../utils/url-utils';
 
-type Photo = { id: string; title: string; image: ImageMetadata };
-
-export default function PhotoCarousel({ photos }: { photos: Photo[] }) {
+export default function PhotoCarousel({ photos }: { photos: CollectionEntry<"photos">[] }) {
     const [index, setIndex] = useState(0);
     if (photos.length === 0) return null;
 
@@ -13,7 +11,7 @@ export default function PhotoCarousel({ photos }: { photos: Photo[] }) {
     return (
         <div className="carousel">
             <button onClick={prev} aria-label="Previous">‹</button>
-            <a href={`/photos/${photos[index].id}`}><img src={"/" + photos[index].image.src} alt={photos[index].title} width={300} /></a>
+            <a href={`/photos/${photos[index].id}`}><img src={photos[index].data.image.src} alt={photos[index].data.title} width={300} /></a>
             <button onClick={next} aria-label="Next">›</button>
         </div>
     );

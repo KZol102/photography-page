@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    photos: CollectionEntry<"photos">[];
+}
+
+const { photos } = Astro.props;
+---
+
+<div class="wrap">
+    {
+        photos.map((photo) => (
+            <div class="box">
+                <a href={"/photos/" + photo.id}>
+                    <Image
+                        src={photo.data.image}
+                        alt={photo.data.title}
+                        title={photo.data.title}
+                        width={500}
+                        height={500}
+                    />
+                </a>
+            </div>
+        ))
+    }
+</div>

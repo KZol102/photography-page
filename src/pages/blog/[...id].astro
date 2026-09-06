@@ -38,12 +38,7 @@ shuffleArray(relatedPhotos);
         relatedPhotos.length > 0 && (
             <div>
                 <h3>Other photos shot with this {post.data.category}</h3>
-                <PhotoCarousel
-                    photos={relatedPhotos.map((p) => {
-                        return { id: p.id, ...p.data };
-                    })}
-                    client:visible
-                />
+                <PhotoCarousel photos={relatedPhotos} client:visible />
             </div>
         )
     }

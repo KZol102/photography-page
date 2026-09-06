@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { toSlug } from "../../../utils/url-utils";
 import Layout from "../../../layouts/Layout.astro";
+import PhotoGrid from "../../../components/PhotoGrid.astro";
 
 export async function getStaticPaths() {
     const photos = await getCollection("photos");
@@ -9,13 +10,18 @@ export async function getStaticPaths() {
 
     return allTags.map((tag: string) => ({
         params: { tag: toSlug(tag) },
-        props: { photos: photos.filter((p) => p.data.tags?.includes(tag)) },
+        props: {
+            photos: photos.filter((p) => p.data.tags?.includes(tag)),
+            displayTag: tag,
+        },
     }));
 }
 
 const { photos } = Astro.props;
 ---
 
-<Layout>
-    {photos.map((photo) => <div>{photo.data.title}</div>)}
+<Layout title={"Portfolio | " + Astro.props.displayTag}>
+    <h1>{Astro.props.displayTag}</h1>
+
+    <PhotoGrid photos={photos.sort((a, b) => b.data.order - a.data.order)} />
 </Layout>

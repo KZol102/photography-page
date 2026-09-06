@@ -1,3 +1,10 @@
+---
+import { getCollection } from "astro:content";
+import CategroyDropdown from "../components/CategroyDropdown.astro";
+const photos = await getCollection("photos");
+const allTags = [...new Set(photos.flatMap((p) => p.data.tags ?? []))];
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -11,7 +18,10 @@
 					<div class="header">
 						<div class="logo">Kiss Zoltán Béla</div>
 						<ul class="menu">
-							<li class="menu-item"><a href="/">Portfolio</a></li>
+							<!-- <li class="menu-item"><a href="/">Portfolio</a></li> -->
+							<li class="menu-item">
+								<CategroyDropdown tags={allTags} />
+							</li>
 							<li class="menu-item">
 								<a href="/equipment">Equipment</a>
 							</li>

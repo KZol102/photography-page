@@ -1,0 +1,171 @@
+---
+import { toSlug } from "../utils/url-utils";
+
+interface Props {
+    tags: string[];
+}
+
+const { tags } = Astro.props as { tags: string[] };
+---
+
+<div class="category-dropdown">
+    <div class="split-button">
+        <a href="/" class="main-link">Portfolio</a>
+        <button
+            class="dropdown-trigger"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Show categories"
+        >
+            <svg
+                class="chevron"
+                width="10"
+                height="6"
+                viewBox="0 0 10 6"
+                aria-hidden="true"
+            >
+                <path
+                    d="M1 1l4 4 4-4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"></path>
+            </svg>
+        </button>
+    </div>
+
+    <ul class="dropdown-menu" role="menu">
+        {
+            tags.map((tag) => (
+                <li role="none">
+                    <a role="menuitem" href={`/photos/category/${toSlug(tag)}`}>
+                        {tag}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</div>
+
+<style>
+    .category-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .split-button {
+        display: inline-flex;
+        align-items: stretch;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    .main-link {
+        padding: 0.5em 0.9em;
+        text-decoration: none;
+        color: inherit;
+        font: inherit;
+    }
+
+    .main-link:hover,
+    .main-link:focus {
+        background-color: var(--text);
+        color: var(--background) !important;
+    }
+
+    .dropdown-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 0.6em;
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .dropdown-trigger:hover,
+    .dropdown-trigger:focus {
+        background-color: var(--text);
+        color: var(--background);
+    }
+
+    .chevron {
+        transition: transform 0.15s ease;
+    }
+
+    .dropdown-trigger[aria-expanded="true"] .chevron {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin: 0;
+        padding: 0.4em 0;
+        list-style: none;
+        min-width: 10rem;
+        background: var(--background, white);
+        border: 1px solid var(--border, #ddd);
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4px);
+        transition:
+            opacity 0.12s ease,
+            transform 0.12s ease;
+    }
+
+    .category-dropdown.open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-menu a {
+        display: block;
+        padding: 0.5em 1em;
+        text-decoration: none;
+        color: inherit;
+        white-space: nowrap;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a:focus {
+        color: var(--background);
+        background: var(--text, #f2f2f2);
+    }
+</style>
+
+<script>
+    document.querySelectorAll(".category-dropdown").forEach((wrapper) => {
+        const trigger = wrapper.querySelector(
+            ".dropdown-trigger",
+        ) as HTMLButtonElement;
+
+        const close = () => {
+            wrapper.classList.remove("open");
+            trigger.setAttribute("aria-expanded", "false");
+        };
+        const open = () => {
+            wrapper.classList.add("open");
+            trigger.setAttribute("aria-expanded", "true");
+        };
+
+        trigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            wrapper.classList.contains("open") ? close() : open();
+        });
+
+        document.addEventListener("click", () => close());
+
+        wrapper.addEventListener("keydown", (e) => {
+            if (e instanceof KeyboardEvent && e.key === "Escape") {
+                close();
+                trigger.focus();
+            }
+        });
+    });
+</script>

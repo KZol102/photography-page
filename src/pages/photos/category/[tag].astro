@@ -21,7 +21,13 @@ const { photos } = Astro.props;
 ---
 
 <Layout title={"Portfolio | " + Astro.props.displayTag}>
-    <h1>{Astro.props.displayTag}</h1>
+    <h1>{Astro.props.displayTag} photographs</h1>
 
     <PhotoGrid photos={photos.sort((a, b) => b.data.order - a.data.order)} />
 </Layout>
+
+<style>
+    h1 {
+        text-align: center;
+    }
+</style>

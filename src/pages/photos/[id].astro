@@ -71,8 +71,9 @@ const details: [string | undefined, string][] = [
                     details
                         .filter(([value]) => !!value)
                         .map(([detail, name]) => (
-                            <p class={name.toLowerCase()}>
-                                {name}: {detail}
+                            <p class={name.toLowerCase() + " detail"}>
+                                <span class="detail-name">{name}</span>:{" "}
+                                {detail}
                             </p>
                         ))
                 }
@@ -86,11 +87,9 @@ const details: [string | undefined, string][] = [
                 (data.tags?.length ?? 0) > 0 && (
                     <div class="tags">
                         {(data.tags ?? []).map((tag) => (
-                            <span class="tag">
-                                <a href={"/photos/category/" + toSlug(tag)}>
-                                    #{tag}
-                                </a>
-                            </span>
+                            <a href={"/photos/category/" + toSlug(tag)}>
+                                <span class="tag">#{tag}</span>
+                            </a>
                         ))}
                     </div>
                 )
@@ -107,6 +106,7 @@ const details: [string | undefined, string][] = [
         margin-right: auto;
         display: flex;
         flex-direction: column;
+        margin-bottom: 4rem;
     }
 
     div.content.picture-display img {
@@ -117,16 +117,26 @@ const details: [string | undefined, string][] = [
     }
 
     div.content.picture-display img {
-        max-width: fit-content;
+        max-width: 90vw;
         max-height: 80vh;
         width: auto;
+        height: auto;
+    }
+
+    div.content.picture-display .details {
+        padding-left: 0.7rem;
     }
 
     div.content.picture-display .details .title {
         font-size: 3.2rem;
     }
 
+    span.detail-name {
+        font-weight: 600;
+    }
+
     div.tags {
+        padding-top: 2rem;
         display: flex;
         gap: 1rem;
     }
@@ -136,7 +146,7 @@ const details: [string | undefined, string][] = [
         border-radius: 1rem;
     }
 
-    div.tags span.tag a {
+    div.tags a {
         text-decoration: none;
         color: white;
     }

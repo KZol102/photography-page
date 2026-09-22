@@ -5,6 +5,7 @@ import { glob } from 'astro/loaders';
 
 export const blogCategories = ["camera", "lens", "film", "other"] as const;
 export const lensMounts = ["Minolta SR", "M42"] as const;
+export const devProcesses = ["B&W", "C-41", "ECN-2", "E-6", "B&W Reversal"] as const;
 
 const film = z.union(
   [
@@ -18,7 +19,15 @@ const film = z.union(
       misc: z.string().optional()
     }
     )
-  ])
+  ]);
+
+const dev = z.object({
+  process: z.enum(devProcesses),
+  temp: z.int().positive().optional(),
+  developer: z.string().optional(),
+  time: z.array(z.int().positive()).min(1).max(3).optional(),
+  notes: z.string().optional()
+});
 
 const photos = defineCollection({
   loader: photoLoader('./src/photos'),
@@ -30,8 +39,9 @@ const photos = defineCollection({
     lens: z.string().optional(),
     filters: z.array(z.string()).optional(),
     film: film.optional(),
+    dev: dev.optional(),
     tags: z.array(z.string()).optional(),
-    image: image(),
+    image: image()
   }),
 });
 

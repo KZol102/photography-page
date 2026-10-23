@@ -1,5 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
 import { useState } from 'react';
+import styles from "./PhotoCarousel.module.css";
 
 export default function PhotoCarousel({ photos }: { photos: CollectionEntry<"photos">[] }) {
     const [index, setIndex] = useState(0);
@@ -9,9 +10,9 @@ export default function PhotoCarousel({ photos }: { photos: CollectionEntry<"pho
     const prev = () => setIndex(i => (i - 1 + photos.length) % photos.length);
 
     return (
-        <div className="carousel">
+        <div className={styles.carousel}>
             <button onClick={prev} aria-label="Previous">‹</button>
-            <a href={`/photos/${photos[index].id}`}><img src={photos[index].data.image.src} alt={photos[index].data.title} width={300} /></a>
+            <a href={`/photos/${photos[index].id}`}><img src={photos[index].data.image.src} alt={photos[index].data.title} title={photos[index].data.title} width={300} /></a>
             <button onClick={next} aria-label="Next">›</button>
         </div>
     );

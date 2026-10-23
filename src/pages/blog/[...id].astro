@@ -25,21 +25,101 @@ shuffleArray(relatedPhotos);
 ---
 
 <Layout title={"KZB | " + post.data.title}>
-    {
-        post.data.hero && (
-            <div class="hero">
-                <Image src={post.data.hero} alt="Hero image" />
+    <div class="blog-post">
+        <div class="blog-header">
+            <div class="title">
+                <h1>{post.data.title}</h1>
+                <div class="info">
+                    <p id="author">Written by: Zoltán Béla Kiss</p>
+                    {
+                        post.data.pubDate && (
+                            <p class="separator">|</p>
+                            <p id="published">
+                                {post.data.pubDate.toDateString()}
+                                {post.data.lastUpdateDate &&
+                                    ` (edited: ${post.data.lastUpdateDate.toDateString()})`}
+                            </p>
+                        )
+                    }
+                </div>
             </div>
-        )
-    }
-    <h1>{post.data.title}</h1>
-    <article><Content /></article>
-    {
-        relatedPhotos.length > 0 && (
-            <div>
-                <h3>Other photos shot with this {post.data.category}</h3>
-                <PhotoCarousel photos={relatedPhotos} client:visible />
-            </div>
-        )
-    }
+            {
+                post.data.hero && (
+                    <div class="hero">
+                        <Image src={post.data.hero} alt="Hero image" />
+                    </div>
+                )
+            }
+        </div>
+
+        <article><Content /></article>
+        {
+            relatedPhotos.length > 0 && (
+                <div>
+                    <h3>Other photos shot with this {post.data.category}</h3>
+                    <PhotoCarousel photos={relatedPhotos} client:visible />
+                </div>
+            )
+        }
+    </div>
 </Layout>
+
+<style>
+    .blog-post {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding-inline: clamp(1rem, 4vw, 2rem);
+    }
+
+    .blog-post > article,
+    .blog-header {
+        width: 100%;
+        max-width: 1000px;
+    }
+
+    div.hero img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* header metadata: let it wrap instead of overflowing */
+    .info {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 0.5em;
+        align-items: baseline;
+    }
+
+    /* Markdown output isn't scoped, so reach it with :global() */
+    article :global(img),
+    article :global(video) {
+        max-width: 100%;
+        height: auto;
+    }
+
+    article :global(pre),
+    article :global(table) {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    article :global(p),
+    article :global(li) {
+        overflow-wrap: anywhere; /* long URLs shouldn't force sideways scroll */
+    }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 1.75rem;
+        }
+
+        /* the "|" looks odd when the date wraps onto its own line */
+        .separator {
+            display: none;
+        }
+    }
+</style>
